@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model divisi {
+  id       String     @id
+  name     String     @db.VarChar(255)
+  Pengguna pengguna[]
+}
+
+model pengguna {
+  id         String   @id
+  name       String   @db.VarChar(255)
+  email      String   @unique @db.VarChar(255)
+  password   String   @db.VarChar(255)
+  status     String   @db.VarChar(255)
+  role       String   @db.VarChar(255)
+  periode    String   @db.VarChar(255)
+  jabatan    String   @db.VarChar(255)
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @default(now()) @db.Timestamp(6)
+  divisi_id  String
+  Divisi     divisi   @relation(fields: [divisi_id], references: [id])
+
+  @@index([divisi_id], map: "pengguna_divisi_id_fkey")
+}
