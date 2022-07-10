@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import AOS from 'aos';
+import { Toaster } from "react-hot-toast";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
@@ -10,7 +11,15 @@ function MyApp({ Component, pageProps }: AppProps) {
       duration: 1000
     });
   }, []);
-  return <Component {...pageProps} />;
+  return (
+    <>
+      <Toaster
+        position="top-right"
+        reverseOrder={true}
+      />
+      <Component {...pageProps} />
+    </>
+  )
 }
 
 export default MyApp;

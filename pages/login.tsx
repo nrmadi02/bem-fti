@@ -38,7 +38,7 @@ const Login: NextPage = () => {
           <div className="basis-full lg:basis-2/5 overflow-auto bg-gradient-to-r from-teal-900 to-teal-700 lg:bg-gradient-to-t lg:from-teal-800 lg:to-teal-800 w-full">
             <div className="flex flex-col sm:flex-row">
               <div className="flex-col flex justify-center items-center sm:h-screen p-5 lg:hidden">
-                <div data-aos="fade-right" className="flex justify-center gap-5  lg:hidden">
+                <div data-aos="fade-right" className="flex mt-5 justify-center gap-5  lg:hidden">
                   <Image width={70} height={70}  priority={true} quality={40} src={LogoBem} alt="_logobem" />
                   <Image width={70} height={70} priority={true} quality={10} src={LogoKabinet} alt="_logokabinet" />
                 </div>

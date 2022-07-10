@@ -14,7 +14,7 @@ model divisi {
 }
 
 model pengguna {
-  id         String   @id
+  id         String   @id @default(cuid())
   name       String   @db.VarChar(255)
   email      String   @unique @db.VarChar(255)
   password   String   @db.VarChar(255)
@@ -22,6 +22,7 @@ model pengguna {
   role       String   @db.VarChar(255)
   periode    String   @db.VarChar(255)
   jabatan    String   @db.VarChar(255)
+  foto       String   @db.Text
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @default(now()) @db.Timestamp(6)
   divisi_id  String
