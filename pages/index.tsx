@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 
 const Home: NextPage = () => {
   return (
@@ -10,9 +11,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div>
-        <button className="btn btn-primary">test typescript</button>
-      </div>
+      <Link href={"/login"}>
+        <button className="btn btn-primary">Login</button>
+      </Link>
     </div>
   );
 };

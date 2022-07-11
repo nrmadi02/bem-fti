@@ -1,6 +1,8 @@
 import { NextPage } from "next";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import LogoBem from "../../assets/logo/logo-bem.webp"
 import SidebarItems from "../SidebarItems/SidebarItems";
 
@@ -10,8 +12,33 @@ type Props = {
   children: JSX.Element
 }
 
+export interface User {
+  user: any;
+}
+
 const DashboardLayout: NextPage<Props> = ({ children, title }) => {
+  const {data: session} = useSession()
+  const [data, setData] = useState<User | undefined>(undefined)
   const [open, setOpen] = useState(true)
+
+  const handleLogOut = async () => {
+    await signOut({
+      callbackUrl: '/login'
+    })
+  }
+
+  useEffect(() => {
+    if (session){
+      setData({
+        user: session.user
+      })
+    }
+  }, [session])
+
+  useEffect(() => {
+    console.log("Data User :", data)
+  }, [data])
+
   return (
     <div className="flex flex-col md:flex-row relative z-0">
       <div className={`transition-all hidden md:block flex-none fixed bg-base-200 text-primary p-5 h-screen ${open ? 'w-24' : 'w-72'}`}>
@@ -24,7 +51,7 @@ const DashboardLayout: NextPage<Props> = ({ children, title }) => {
           </div>
           <div className="shadow-lg w-full h-[1px] bg-primary mt-3"></div>
           <div className="">
-            <SidebarItems isOpen={!open} />
+            <SidebarItems isOpen={!open} user={data?.user} />
           </div>
         </div>
       </div>
@@ -53,7 +80,7 @@ const DashboardLayout: NextPage<Props> = ({ children, title }) => {
           <div className="absolute transition-all bg-black md:hidden bg-opacity-50 inset-0 flex justify-start items-start z-10">
             <div data-aos="fade-right" className="w-72 bg-base-200 h-screen">
               <div className="mt-5">
-                <SidebarItems isOpen={!open} />
+                <SidebarItems isOpen={!open} user={data?.user} />
               </div>
             </div>
           </div>
@@ -76,7 +103,7 @@ const DashboardLayout: NextPage<Props> = ({ children, title }) => {
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
-                    <img src="https://placeimg.com/80/80/people" />
+                    <img src={`${data?.user && data.user.foto ? data.user.foto : "https://placeimg.com/192/192/people" }`} />
                   </div>
                 </label>
                 <ul tabIndex={0} className="mt-3 p-2 bg-base-200 shadow menu menu-compact dropdown-content rounded-box w-52">
@@ -86,7 +113,7 @@ const DashboardLayout: NextPage<Props> = ({ children, title }) => {
                     </a>
                   </li>
                   <li><a>Settings</a></li>
-                  <li><a>Logout</a></li>
+                  <li><a onClick={handleLogOut}>Logout</a></li>
                 </ul>
               </div>
             </div>

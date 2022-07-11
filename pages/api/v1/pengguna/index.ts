@@ -1,8 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from '../../../../database/db';
-import { divisi } from '@prisma/client';
-import bcrypt from 'bcryptjs'
+import { hash } from 'bcryptjs'
 import { randomUUID } from "crypto";
 
 
@@ -28,9 +27,9 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
         });
       }
     case "POST":
+      let nodemailer = require('nodemailer')
       const { name, email, password, periode, role, status, jabatan, foto, divisi_id } = _req.body
-      const salt = await bcrypt.genSalt(5)
-      const pw = bcrypt.hashSync(password, salt)
+      const pw = await hash(password, 12)
       try {
         const existData = await prisma.pengguna.findFirst({
           where: {
@@ -58,6 +57,34 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
             Divisi: { connect: { id: divisi_id } }
           }
         })
+
+        const transporter = nodemailer.createTransport({
+          port: 465,
+          host: "smtp.gmail.com",
+          auth: {
+            user: 'nrmadi02@gmail.com',
+            pass: 'yeodgjfswkinirts',
+          },
+          secure: true,
+        })
+
+        const mailData = {
+          from: 'nrmadi02@gmail.com',
+          to: email,
+          subject: `Message From BEM-FTI UNISKA`,
+          text: "Informasi akun",
+          html: `<div>Informasi akun anda di website BEM-FTI</div>
+          <p>Email : ${email}</p>
+          <p>Password : ${password}</p>`
+        }
+
+        await transporter.sendMail(mailData, function (err: any, info: any) {
+          if(err)
+            console.log(err)
+          else
+            console.log(info)
+        })
+
         return res.status(201).json({
           message: "success create pengguna",
           status: true,
