@@ -23,7 +23,7 @@ const FormLogin: NextPage = () => {
     toast.error("gagal login: " + result?.error)
     setMessageErr(result?.error)
     setLoading(false)
-    router.replace('/dashboard')
+    router.push('/dashboard')
   }
 
   const handleLogin = async (data: any) => {
