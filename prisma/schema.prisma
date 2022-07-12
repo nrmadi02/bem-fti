@@ -17,7 +17,6 @@ model pengguna {
   id         String   @id @default(cuid())
   name       String   @db.VarChar(255)
   email      String   @unique @db.VarChar(255)
-  npm        String?  @unique @db.VarChar(255)
   password   String   @db.VarChar(255)
   status     String   @db.VarChar(255)
   role       String   @db.VarChar(255)
@@ -27,6 +26,7 @@ model pengguna {
   updated_at DateTime @default(now()) @db.Timestamp(6)
   divisi_id  String
   foto       String   @db.Text
+  npm        String?  @unique @db.VarChar(255)
   Divisi     divisi   @relation(fields: [divisi_id], references: [id])
 
   @@index([divisi_id], map: "pengguna_divisi_id_fkey")
