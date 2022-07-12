@@ -1,15 +1,3 @@
-// generator client {
-//   provider        = "prisma-client-js"
-//   previewFeatures = ["referentialIntegrity"]
-// }
-
-// datasource db {
-//   provider             = "mysql"
-//   url                  = "mysql://2ebl3hv05p7s:pscale_pw_OEGqf3UltfRiSyZetMdMvwIqyDs65MypVe_Ugbqba8g@xqs18wh6e11z.ap-southeast-2.psdb.cloud/db_bem?sslaccept=strict"
-//   referentialIntegrity = "prisma"
-// }
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -34,10 +22,10 @@ model pengguna {
   role       String   @db.VarChar(255)
   periode    String   @db.VarChar(255)
   jabatan    String   @db.VarChar(255)
-  foto       String   @db.Text
   created_at DateTime @default(now()) @db.Timestamp(6)
   updated_at DateTime @default(now()) @db.Timestamp(6)
   divisi_id  String
+  foto       String   @db.Text
   Divisi     divisi   @relation(fields: [divisi_id], references: [id])
 
   @@index([divisi_id], map: "pengguna_divisi_id_fkey")

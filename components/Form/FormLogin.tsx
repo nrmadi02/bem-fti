@@ -14,7 +14,6 @@ const FormLogin: NextPage = () => {
 
   const setSuccessLogin = () => {
     toast.success('sukses login')
-    router.push('/dashboard')
     setTimeout(() => {
       setLoading(false)
     }, 1000)
@@ -38,6 +37,7 @@ const FormLogin: NextPage = () => {
     });
     if (!result?.error) {
       setSuccessLogin()
+      router.replace('/dashboard')
     } else {
       setFailedLogin(result)
     }
