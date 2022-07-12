@@ -61,7 +61,7 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
         const transporter = await nodemailer.createTransport({
           port: 587,
           host: "smtp-mail.outlook.com",
-          secure: false,
+          secure:  process.env.NODE_ENV === "development" ? false : true,
           auth: {
             user: 'nrmadi2202@outlook.co.id',
             pass: 'Ulalaa2202',
