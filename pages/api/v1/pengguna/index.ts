@@ -58,30 +58,25 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
           }
         })
 
-        const transporter = await nodemailer.createTransport({
-          port: 587,
-          host: "smtp-mail.outlook.com",
-          secure:  process.env.NODE_ENV === "development" ? false : true,
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
           auth: {
-            user: 'nrmadi2202@outlook.co.id',
-            pass: 'Ulalaa2202',
-          },
-          tls: {
-            ciphers: 'SSLv3'
+            user: 'uniska.fti.bem@gmail.com',
+            pass: 'skqypgsokbcwikuk',
           }
         })
 
         const mailData = {
-          from: 'nrmadi2202@outlook.co.id',
+          from: 'uniska.fti.bem@gmail.com',
           to: email,
-          subject: `BEM-FTI UNISKA`,
+          subject: `BEM-FTI UNISKA MAB`,
           text: "Informasi akun",
           html: `
           <html>
             <body>
               <div>Informasi akun anda di website BEM-FTI</div>
               <p>Email : ${email}</p>
-              <p>Password : ${password}</p>
+              <p>Pass : ${password}</p>
             </body>
           </html>`
         }
