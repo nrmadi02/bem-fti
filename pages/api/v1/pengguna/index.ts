@@ -58,10 +58,10 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
           }
         })
 
-        const transporter = nodemailer.createTransport({
+        const transporter = await nodemailer.createTransport({
           port: 587,
           host: "smtp-mail.outlook.com",
-          secureConnection: false,
+          secure: false,
           auth: {
             user: 'nrmadi2202@outlook.co.id',
             pass: 'Ulalaa2202',
@@ -76,9 +76,14 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
           to: email,
           subject: `BEM-FTI UNISKA`,
           text: "Informasi akun",
-          html: `<div>Informasi akun anda di website BEM-FTI</div>
-          <p>Email : ${email}</p>
-          <p>Password : ${password}</p>`
+          html: `
+          <html>
+            <body>
+              <div>Informasi akun anda di website BEM-FTI</div>
+              <p>Email : ${email}</p>
+              <p>Password : ${password}</p>
+            </body>
+          </html>`
         }
 
         await transporter.sendMail(mailData, function (err: any, info: any) {
