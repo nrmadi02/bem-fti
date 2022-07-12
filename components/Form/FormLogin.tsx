@@ -22,9 +22,8 @@ const FormLogin: NextPage = () => {
   const setFailedLogin = (result: any) => {
     toast.error("gagal login: " + result?.error)
     setMessageErr(result?.error)
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
+    setLoading(false)
+    router.replace('/dashboard')
   }
 
   const handleLogin = async (data: any) => {
@@ -37,7 +36,7 @@ const FormLogin: NextPage = () => {
     });
     if (!result?.error) {
       setSuccessLogin()
-      router.replace('/dashboard')
+      
     } else {
       setFailedLogin(result)
     }
