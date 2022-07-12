@@ -28,7 +28,7 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
       }
     case "POST":
       let nodemailer = require('nodemailer')
-      const { name, email, password, periode, role, status, jabatan, foto, divisi_id } = _req.body
+      const { name, email, npm, password, periode, role, status, jabatan, foto, divisi_id } = _req.body
       const pw = await hash(password, 12)
       try {
         const existData = await prisma.pengguna.findFirst({
@@ -54,6 +54,7 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
             periode: periode,
             role: role,
             status: status,
+            npm: npm,
             Divisi: { connect: { id: divisi_id } }
           }
         })
@@ -65,6 +66,19 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
             pass: 'skqypgsokbcwikuk',
           }
         })
+
+        await new Promise((resolve, reject) => {
+          // verify connection configuration
+          transporter.verify(function (error: any, success: unknown) {
+            if (error) {
+              console.log(error);
+              reject(error);
+            } else {
+              console.log("Server is ready to take our messages");
+              resolve(success);
+            }
+          });
+        });
 
         const mailData = {
           from: 'uniska.fti.bem@gmail.com',
@@ -81,12 +95,18 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
           </html>`
         }
 
-        await transporter.sendMail(mailData, function (err: any, info: any) {
-          if (err)
-            console.log(err)
-          else
-            console.log(info)
-        })
+        await new Promise((resolve, reject) => {
+          // send mail
+          transporter.sendMail(mailData, (err: any, info: unknown) => {
+              if (err) {
+                  console.error(err);
+                  reject(err);
+              } else {
+                  console.log(info);
+                  resolve(info);
+              }
+          });
+      });
 
         return res.status(201).json({
           message: "success create pengguna",

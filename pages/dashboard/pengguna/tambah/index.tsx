@@ -183,6 +183,15 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
               <div className="flex md:mt-3 flex-col w-full gap-3">
                 <div className="form-control w-full">
                   <label className="label">
+                    <span className="label-text">NPM</span>
+                    {errors!.npm && <span className="label-text-alt text-red-400">{'NPM wajib ada'}</span>}
+                  </label>
+                  <input {...register("npm", {
+                    required: true
+                  })} type="text" name="npm" placeholder="npm..." className={`input input-bordered input-primary w-full ${errors!.npm && 'input-error'}`} />
+                </div>
+                <div className="form-control w-full">
+                  <label className="label">
                     <span className="label-text">Status</span>
                     {errors!.status && <span className="label-text-alt text-red-400">{'Status wajib dipilih'}</span>}
                   </label>

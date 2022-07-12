@@ -17,6 +17,7 @@ model pengguna {
   id         String   @id @default(cuid())
   name       String   @db.VarChar(255)
   email      String   @unique @db.VarChar(255)
+  npm        String?  @unique @db.VarChar(255)
   password   String   @db.VarChar(255)
   status     String   @db.VarChar(255)
   role       String   @db.VarChar(255)
