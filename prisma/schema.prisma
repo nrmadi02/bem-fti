@@ -1,3 +1,15 @@
+// generator client {
+//   provider        = "prisma-client-js"
+//   previewFeatures = ["referentialIntegrity"]
+// }
+
+// datasource db {
+//   provider             = "mysql"
+//   url                  = "mysql://2ebl3hv05p7s:pscale_pw_OEGqf3UltfRiSyZetMdMvwIqyDs65MypVe_Ugbqba8g@xqs18wh6e11z.ap-southeast-2.psdb.cloud/db_bem?sslaccept=strict"
+//   referentialIntegrity = "prisma"
+// }
+
+
 generator client {
   provider = "prisma-client-js"
 }

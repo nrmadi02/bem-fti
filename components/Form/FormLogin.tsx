@@ -14,7 +14,7 @@ const FormLogin: NextPage = () => {
 
   const setSuccessLogin = () => {
     toast.success('sukses login')
-    router.replace('/dashboard')
+    router.push('/dashboard')
     setTimeout(() => {
       setLoading(false)
     }, 1000)

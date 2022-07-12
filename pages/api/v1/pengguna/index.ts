@@ -59,19 +59,22 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
         })
 
         const transporter = nodemailer.createTransport({
-          port: 465,
-          host: "smtp.gmail.com",
+          port: 587,
+          host: "smtp-mail.outlook.com",
+          secureConnection: false,
           auth: {
-            user: 'nrmadi02@gmail.com',
-            pass: 'yeodgjfswkinirts',
+            user: 'nrmadi2202@outlook.co.id',
+            pass: 'Ulalaa2202',
           },
-          secure: true,
+          tls: {
+            ciphers: 'SSLv3'
+          }
         })
 
         const mailData = {
-          from: 'nrmadi02@gmail.com',
+          from: 'nrmadi2202@outlook.co.id',
           to: email,
-          subject: `Message From BEM-FTI UNISKA`,
+          subject: `BEM-FTI UNISKA`,
           text: "Informasi akun",
           html: `<div>Informasi akun anda di website BEM-FTI</div>
           <p>Email : ${email}</p>
@@ -79,7 +82,7 @@ export default async function (_req: NextApiRequest, res: NextApiResponse) {
         }
 
         await transporter.sendMail(mailData, function (err: any, info: any) {
-          if(err)
+          if (err)
             console.log(err)
           else
             console.log(info)

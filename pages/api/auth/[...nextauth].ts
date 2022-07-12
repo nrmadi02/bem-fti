@@ -97,4 +97,16 @@ export default NextAuth({
       return session
     },
   },
+  useSecureCookies: process.env.NODE_ENV !== "development" ? true : false,
+  cookies: {
+    sessionToken: {
+      name: `session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: true
+      }
+    },
+  }
 });
