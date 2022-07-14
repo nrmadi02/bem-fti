@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Head from "next/head";
+import FooterDashboard from "../../components/Footer/FooterDashboard";
 import DashboardLayout from "../../components/Layout/DashboardLayout";
 
 const Dashboard: NextPage = () => {
@@ -11,8 +12,11 @@ const Dashboard: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <DashboardLayout title={"Dashboard"}>
-        <div>
-          <p>wkwkwkk</p>
+        <div className="flex flex-col">
+          <div className="h-screen">
+            <p>wkkwkwkkw</p>
+          </div>
+          <FooterDashboard />
         </div>
       </DashboardLayout>
     </div>

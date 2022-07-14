@@ -1,10 +1,11 @@
 import { NextPage } from "next";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import LogoBem from "../../assets/logo/logo-bem.webp"
 import SidebarItems from "../SidebarItems/SidebarItems";
+import axios from "axios";
+import Link from "next/link";
 
 
 type Props = {
@@ -17,9 +18,10 @@ export interface User {
 }
 
 const DashboardLayout: NextPage<Props> = ({ children, title }) => {
-  const {data: session} = useSession()
+  const { data: session } = useSession()
   const [data, setData] = useState<User | undefined>(undefined)
   const [open, setOpen] = useState(true)
+  const [divisi, setDivisi] = useState<any>()
 
   const handleLogOut = async () => {
     await signOut({
@@ -28,20 +30,44 @@ const DashboardLayout: NextPage<Props> = ({ children, title }) => {
   }
 
   useEffect(() => {
-    if (session){
+    if (session) {
       setData({
         user: session.user
       })
     }
   }, [session])
 
+  const fetchDivisiByID = async (id: any) => {
+    axios.get('/api/v1/divisi/' + id, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then(
+      res => {
+        if (res.data.status) {
+          setDivisi(res.data.data)
+        }
+      }
+    ).catch(
+      err => {
+        setDivisi('')
+      }
+    )
+  }
+
   useEffect(() => {
     console.log("Data User :", data)
+    data && fetchDivisiByID(data.user.divisi_id)
   }, [data])
+
+  useEffect(() => {
+    console.log("Divisi : ", divisi)
+  }, [divisi])
 
   return (
     <div className="flex flex-col md:flex-row relative z-0">
-      <div className={`transition-all hidden md:block flex-none fixed bg-base-200 text-primary p-5 h-screen ${open ? 'w-24' : 'w-72'}`}>
+      <div className={`transition-all hidden md:block flex-none fixed bg-base-200 text-primary p-5 h-full ${open ? 'w-24' : 'w-72'}`}>
         <div className="flex flex-col">
           <div className="flex flex-row justify-center items-center">
             <div className={`flex gap-3 justify-center items-center ${!open && "mr-5"}`}>
@@ -96,34 +122,45 @@ const DashboardLayout: NextPage<Props> = ({ children, title }) => {
                 <svg className="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" /></svg>
               </label>
             </div>
-            <div className="flex-1">
-              <a className="btn btn-ghost normal-case text-xl">{title}</a>
+            <div className="flex-1 hidden md:block">
+              <a className="btn btn-ghost normal-case text-xl ">BEM-FTI</a>
             </div>
             <div className="flex-none gap-2">
+              <div className="hidden md:flex md:flex-col md:items-end">
+                <p className="text-sm font-black">{data?.user.name}</p>
+                <p className="text-[10px]">{divisi?.name}</p>
+              </div>
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                   <div className="w-10 rounded-full">
-                    <img src={`${data?.user && data.user.foto ? data.user.foto : "https://placeimg.com/192/192/people" }`} />
+                    <img src={`${data?.user && data.user.foto ? data.user.foto : "https://placeimg.com/192/192/people"}`} />
                   </div>
                 </label>
                 <ul tabIndex={0} className="mt-3 p-2 bg-base-200 shadow menu menu-compact dropdown-content rounded-box w-52">
                   <li>
-                    <a className="justify-between">
-                      Profile
-                    </a>
+                    <Link href={"/dashboard/profile"}>
+                      <a className="justify-between">
+                        Profile
+                      </a>
+                    </Link>
                   </li>
                   <li><a>Settings</a></li>
                   <li><a onClick={handleLogOut}>Logout</a></li>
                 </ul>
               </div>
+              <div className="md:hidden flex flex-col items-start">
+                <p className="text-sm font-black">{data?.user.name}</p>
+                <p className="text-[10px]">{divisi?.name}</p>
+              </div>
             </div>
           </div>
         </div>
         <div className="shadow-lg w-full h-[1px] bg-primary"></div>
-        <div className="h-screen pt-5 rounded-[1.5rem] md:rounded-[3rem]">
+        <div className="h-full pt-5 rounded-[1.5rem] md:rounded-[3rem]">
           {children}
         </div>
       </div>
+      
     </div>
   )
 }

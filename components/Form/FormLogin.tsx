@@ -14,16 +14,14 @@ const FormLogin: NextPage = () => {
 
   const setSuccessLogin = () => {
     toast.success('sukses login')
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
+    setLoading(false)
+    router.replace('/dashboard')
   }
 
   const setFailedLogin = (result: any) => {
     toast.error("gagal login: " + result?.error)
     setMessageErr(result?.error)
     setLoading(false)
-    router.push('/dashboard')
   }
 
   const handleLogin = async (data: any) => {

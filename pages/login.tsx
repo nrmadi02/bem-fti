@@ -5,19 +5,8 @@ import Image from "next/image";
 import LogoBem from "../assets/logo/logo-bem.webp"
 import LogoKabinet from "../assets/logo/logo-kabinet-min.png"
 import FormLogin from "../components/Form/FormLogin";
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { useSession } from "next-auth/react";
 
 const Login: NextPage = () => {
-  const { data: sess } = useSession()
-  const router = useRouter();
-
-  useEffect(()=> {
-    if(sess){
-      router.replace('/dashboard')
-    }
-  }, [router, sess])
   return (
     <>
       <Head>

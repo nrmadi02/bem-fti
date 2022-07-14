@@ -23,6 +23,8 @@ export default NextAuth({
         id: token?.id,
         divisi_id: token?.divisi_id,
         foto: token?.foto,
+        npm: token?.npm,
+        status: token?.status,
         iat: Date.now() / 1000,
         exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
         sub: token?.id,
@@ -60,7 +62,7 @@ export default NextAuth({
 
         const pwValid = await compare(credentials!.password, user.password)
 
-        if (!pwValid){
+        if (!pwValid) {
           throw new Error('password salah')
         }
 
@@ -72,7 +74,9 @@ export default NextAuth({
           periode: user?.periode,
           id: user?.id,
           divisi_id: user?.divisi_id,
-          foto: user?.foto
+          foto: user?.foto,
+          npm: user?.npm,
+          status: user?.status
         };
       }
     }),
@@ -86,12 +90,14 @@ export default NextAuth({
         token.id = user?.id
         token.divisi_id = user?.divisi_id
         token.foto = user?.foto
+        token.npm = user?.npm
+        token.status = user?.status
       }
       return token
     },
     session: async ({ session, token }) => {
       // session callback is called whenever a session for that particular user is checked
-     // in above function we created token.user=user
+      // in above function we created token.user=user
       session.user = token;
       // you might return this in new version
       return session

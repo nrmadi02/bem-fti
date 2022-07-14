@@ -10,6 +10,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import React from "react";
 import { useForm } from "react-hook-form";
+import FooterDashboard from "../../../../components/Footer/FooterDashboard";
 
 type Props = {
   divisis: divisi[]
@@ -73,7 +74,6 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
         'Content-Type': 'application/json',
       },
     }).then((res) => {
-      console.log(res)
       if (res) {
         if (res.status) {
           setLoading(false)
@@ -85,7 +85,6 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
         }
       }
     }).catch((err) => {
-      console.log(err)
       setLoading(false)
       toast.error(err.response.data.message)
     })
@@ -258,6 +257,7 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
               <button type="submit" className={`btn btn-primary px-10 ${loading && 'loading'}`}>{loading ? "loading..." : "+ Tambah"}</button>
             </div>
           </form>
+          <FooterDashboard />
         </div>
 
       </DashboardLayout>
