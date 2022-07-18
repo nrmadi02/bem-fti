@@ -8,7 +8,6 @@ import { divisi } from "@prisma/client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useSession } from 'next-auth/react';
-import FooterDashboard from "../../../components/Footer/FooterDashboard";
 
 type Props = {
   divisis: divisi[]
@@ -40,7 +39,7 @@ const Profile: NextPage<Props> = ({ divisis }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <DashboardLayout title={"Profile"}>
-        <div className="flex flex-col pb-5">
+        <div className="flex flex-col">
           <div className="text-sm breadcrumbs">
             <ul>
               <li><Link href="/dashboard">Home</Link></li>
@@ -138,8 +137,6 @@ const Profile: NextPage<Props> = ({ divisis }) => {
           <div className="mt-5 text-red-400 font-bold">
             <p>Merubah data profile hanya bisa dilakukan admin BEM-FTI.</p>
           </div>
-
-          <FooterDashboard />
         </div>
       </DashboardLayout>
     </div>

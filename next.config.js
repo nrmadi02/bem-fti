@@ -9,7 +9,10 @@ const nextConfig = {
     });
 
     return config;
-  }
+  },
+  images: {
+		domains: ["i.ibb.co"],
+	},
 }
 
 module.exports = nextConfig

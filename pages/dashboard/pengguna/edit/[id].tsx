@@ -1,11 +1,11 @@
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import DashboardLayout from "../../../../components/Layout/DashboardLayout";
 import Link from 'next/link';
 import { ChangeEvent, useState, useEffect } from 'react';
 import Image from "next/image";
 import { prisma } from '../../../../database/db'
-import { divisi } from "@prisma/client";
+import { divisi, pengguna } from "@prisma/client";
 import axios from "axios";
 import toast from "react-hot-toast";
 import React from "react";
@@ -13,10 +13,11 @@ import { useForm } from "react-hook-form";
 
 type Props = {
   divisis: divisi[]
+  pengguna: pengguna
 }
 
 
-const TambahPengguna: NextPage<Props> = ({ divisis }) => {
+const EditPengguna: NextPage<Props> = ({ divisis, pengguna }) => {
   const { register, setValue, formState: { errors }, handleSubmit, reset } = useForm();
 
   const [file, setFile] = useState('');
@@ -65,9 +66,9 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
       )
   }
 
-  const handleAddData = async (data: any) => {
+  const handleUpdateData = async (data: any) => {
     setLoading(true)
-    await axios.post("/api/v1/pengguna", data, {
+    await axios.put("/api/v1/pengguna", data, {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -77,10 +78,7 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
         if (res.status) {
           setLoading(false)
           toast.success(res.data.message)
-          reset()
-          setImage('')
-          setImg('')
-          setFile('')
+          setFile(res.data.data.foto)
         }
       }
     }).catch((err) => {
@@ -89,23 +87,30 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
     })
   }
 
+  useEffect(() => {
+    if (pengguna.foto){
+      setFile(pengguna.foto)
+      setValue('foto', pengguna.foto)
+    }
+  }, [pengguna.foto])
+
   return (
     <div className="">
       <Head>
-        <title>BEM-FTI || Tambah Pengguna</title>
-        <meta name="description" content="Tambah Pengguna BEM-FTI UNISKA MAB" />
+        <title>BEM-FTI || Edit Pengguna</title>
+        <meta name="description" content="Edit Pengguna BEM-FTI UNISKA MAB" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <DashboardLayout title={"Tambah Pengguna"}>
+      <DashboardLayout title={"Edit Pengguna"}>
         <div className="flex flex-col">
           <div className="text-sm breadcrumbs">
             <ul>
               <li><Link href="/dashboard">Home</Link></li>
               <li><Link href="/dashboard/pengguna">Pengguna</Link></li>
-              <li className="font-bold">Tambah Pengguna</li>
+              <li className="font-bold">Edit Pengguna</li>
             </ul>
           </div>
-          <form onSubmit={handleSubmit(handleAddData)}>
+          <form onSubmit={handleSubmit(handleUpdateData)}>
             <div className="flex flex-col md:flex-row md:w-full mt-5 gap-5">
               <div className="flex flex-col rounded-lg shadow-xl bg-gray-50">
                 <div className="m-4">
@@ -138,13 +143,14 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
                 </div>
               </div>
               <input {...register("foto")} type="hidden" name="foto" placeholder="nama..." className="input input-bordered input-primary w-full" />
+              <input {...register("id")} defaultValue={pengguna.id} type="hidden" name="id" placeholder="nama..." className="input input-bordered input-primary w-full" />
               <div className="flex flex-col w-full gap-3">
                 <div className="form-control w-full">
                   <label className="label">
                     <span className="label-text">Nama</span>
                     {errors!.name && <span className="label-text-alt text-red-400">{'Nama wajib ada'}</span>}
                   </label>
-                  <input {...register("name", { required: true })} type="text" name="name" placeholder="nama..." className={`input input-bordered input-primary w-full ${errors!.name && 'input-error'}`} />
+                  <input {...register("name", { required: true })} defaultValue={pengguna?.name} type="text" name="name" placeholder="nama..." className={`input input-bordered input-primary w-full ${errors!.name && 'input-error'}`} />
                 </div>
                 <div className="form-control w-full">
                   <label className="label">
@@ -154,17 +160,16 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
                   <input {...register("email", {
                     required: true,
                     pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-                  })} type="text" name="email" placeholder="email..." className={`input input-bordered input-primary w-full ${errors!.email && 'input-error'}`} />
+                  })} defaultValue={pengguna?.email} type="text" name="email" placeholder="email..." className={`input input-bordered input-primary w-full ${errors!.email && 'input-error'}`} />
                 </div>
                 <div className="form-control w-full">
                   <label className="label">
-                    <span className="label-text">Password</span>
-                    {errors!.password && <span className="label-text-alt text-red-400">{'Password invalid'}</span>}
+                    <span className="label-text">NPM</span>
+                    {errors!.npm && <span className="label-text-alt text-red-400">{'NPM wajib ada'}</span>}
                   </label>
-                  <input {...register("password", {
-                    required: true,
-                    minLength: 6,
-                  })} type="text" name="password" placeholder="password..." className={`input input-bordered input-primary w-full ${errors!.password && 'input-error'}`} />
+                  <input {...register("npm", {
+                    required: true
+                  })} defaultValue={String(pengguna?.npm)} type="text" name="npm" placeholder="npm..." className={`input input-bordered input-primary w-full ${errors!.npm && 'input-error'}`} />
                 </div>
                 <div className="form-control w-full">
                   <label className="label">
@@ -173,21 +178,13 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
                   </label>
                   <input {...register("periode", {
                     required: true
-                  })} type="text" name="periode" placeholder="periode..." className={`input input-bordered input-primary w-full ${errors!.periode && 'input-error'}`} />
+                  })} defaultValue={pengguna?.periode} type="text" name="periode" placeholder="periode..." className={`input input-bordered input-primary w-full ${errors!.periode && 'input-error'}`} />
                 </div>
               </div>
             </div>
             <div>
               <div className="flex md:mt-3 flex-col w-full gap-3">
-                <div className="form-control w-full">
-                  <label className="label">
-                    <span className="label-text">NPM</span>
-                    {errors!.npm && <span className="label-text-alt text-red-400">{'NPM wajib ada'}</span>}
-                  </label>
-                  <input {...register("npm", {
-                    required: true
-                  })} type="text" name="npm" placeholder="npm..." className={`input input-bordered input-primary w-full ${errors!.npm && 'input-error'}`} />
-                </div>
+
                 <div className="form-control w-full">
                   <label className="label">
                     <span className="label-text">Status</span>
@@ -196,7 +193,7 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
                   <select {...register("status", {
                     required: true,
                     minLength: 1
-                  })} name="status" className={`select select-primary w-full ${errors!.status && 'select-error'}`}>
+                  })} name="status" defaultValue={pengguna?.status} className={`select select-primary w-full ${errors!.status && 'select-error'}`}>
                     <option value={''}>-- pilih status --</option>
                     <option value={'aktif'}>Aktif</option>
                     <option value={'tidak_aktif'}>Tidak Aktif</option>
@@ -210,7 +207,7 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
                   <select {...register("role", {
                     required: true,
                     minLength: 1
-                  })} name="role" className={`select select-primary w-full ${errors!.role && 'select-error'}`}>
+                  })} name="role" defaultValue={pengguna?.role} className={`select select-primary w-full ${errors!.role && 'select-error'}`}>
                     <option value={''}>-- pilih role --</option>
                     <option value={'admin'}>Administrator</option>
                     <option value={'pengguna'}>Pengguna</option>
@@ -224,7 +221,7 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
                   <select {...register("jabatan", {
                     required: true,
                     minLength: 1
-                  })} name="jabatan" className={`select select-primary w-full ${errors!.jabatan && 'select-error'}`}>
+                  })} name="jabatan" defaultValue={pengguna?.jabatan} className={`select select-primary w-full ${errors!.jabatan && 'select-error'}`}>
                     <option value={''}>-- pilih jabatan --</option>
                     <option value={'gubernur'}>Gubernur</option>
                     <option value={'wakil_gubernur'}>Wakil Gubernur</option>
@@ -243,7 +240,7 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
                   <select {...register("divisi_id", {
                     required: true,
                     minLength: 1
-                  })} name="divisi_id" className={`select select-primary w-full ${errors!.divisi_id && 'select-error'}`}>
+                  })} name="divisi_id" defaultValue={pengguna?.divisi_id} className={`select select-primary w-full ${errors!.divisi_id && 'select-error'}`}>
                     <option value={''}>-- pilih divisi --</option>
                     {divisis.length !== 0 && divisis.map(item => (
                       <option key={item?.id} value={item?.id}>{item?.name}</option>
@@ -253,7 +250,7 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
               </div>
             </div>
             <div className="flex justify-end mt-5">
-              <button type="submit" className={`btn btn-primary px-10 ${loading && 'loading'}`}>{loading ? "loading..." : "+ Tambah"}</button>
+              <button type="submit" className={`btn btn-primary px-10 ${loading && 'loading'}`}>{loading ? "loading..." : "Update"}</button>
             </div>
           </form>
         </div>
@@ -263,11 +260,21 @@ const TambahPengguna: NextPage<Props> = ({ divisis }) => {
   )
 }
 
-export default TambahPengguna;
+export default EditPengguna;
 
-export async function getStaticProps() {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const id = context.params?.id
+  const pengguna = await prisma.pengguna.findFirst({
+    where: {
+      id: String(id)
+    }
+  })
   const divisis = await prisma.divisi.findMany()
+  console.log("Data pengguna :", pengguna)
   return {
-    props: { divisis }
+    props: {
+      pengguna: JSON.parse(JSON.stringify(pengguna)),
+      divisis: divisis
+    }
   }
 }

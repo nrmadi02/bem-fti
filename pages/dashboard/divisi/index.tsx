@@ -1,6 +1,5 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import FooterDashboard from "../../../components/Footer/FooterDashboard";
 import DashboardLayout from "../../../components/Layout/DashboardLayout";
 
 const Divisi: NextPage = () => {
@@ -16,7 +15,6 @@ const Divisi: NextPage = () => {
           <div className="h-screen">
             <p>wkkwkwkkw</p>
           </div>
-          <FooterDashboard />
         </div>
       </DashboardLayout>
     </div>

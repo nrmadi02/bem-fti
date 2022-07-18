@@ -1,8 +1,7 @@
-import { GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import DashboardLayout from "../../../components/Layout/DashboardLayout";
 import Link from 'next/link';
-import FooterDashboard from "../../../components/Footer/FooterDashboard";
 import { prisma } from '../../../database/db';
 import { divisi, pengguna } from "@prisma/client";
 import { useEffect, useMemo, useState } from 'react';
@@ -62,9 +61,9 @@ const Pengguna: NextPage<Props> = ({ penggunas, divisis }) => {
           } else if (d.jabatan === 'wakil_gubernur') {
             return "Wakil Gubernur"
           } else if (d.jabatan === 'sekretaris_jendral') {
-            return "Sekretaris Jenderal"
+            return "Sekretaris Umum"
           } else if (d.jabatan === 'bendahara') {
-            return "Bendahara Jenderal"
+            return "Bendahara Umum"
           } else if (d.jabatan === 'koordinator_divisi') {
             return "Koordinator Divisi"
           } else if (d.jabatan === 'sekretaris_divisi') {
@@ -124,8 +123,8 @@ const Pengguna: NextPage<Props> = ({ penggunas, divisis }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <DashboardLayout title={"Pengguna"}>
-        <div className="flex h-screen flex-col">
-          <div className="h-screen">
+        <div className="flex h-full flex-col">
+          <div className="h-full">
             <div className="text-sm breadcrumbs mb-3">
               <ul>
                 <li><Link href="/dashboard">Home</Link></li>
@@ -146,7 +145,6 @@ const Pengguna: NextPage<Props> = ({ penggunas, divisis }) => {
               <Table columns={columns} data={data} menus={null} />
             </div>
           </div>
-          <FooterDashboard />
         </div>
       </DashboardLayout>
     </div>
@@ -155,8 +153,12 @@ const Pengguna: NextPage<Props> = ({ penggunas, divisis }) => {
 
 export default Pengguna;
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const penggunas = await prisma.pengguna.findMany()
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const penggunas = await prisma.pengguna.findMany({
+    orderBy: {
+      name: "asc"
+    }
+  })
   const divisis = await prisma.divisi.findMany()
   console.log("Data pengguna :", penggunas)
   return {

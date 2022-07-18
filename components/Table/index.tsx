@@ -41,7 +41,7 @@ const Table: NextPage<Props> = ({ data, columns, menus }) => {
 
   return (
     <>
-      <div className={`mt-5 flex flex-row ${!menus && 'items-end justify-end mb-5 '}`}>
+      <div className={`mt-5 flex flex-row justify-center ${!menus && 'md:items-end md:justify-end mb-5 '}`}>
         <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
           globalFilter={state.globalFilter}
